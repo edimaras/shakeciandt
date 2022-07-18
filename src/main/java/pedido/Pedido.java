@@ -30,7 +30,7 @@ public class Pedido {
     }
 
     public double calcularTotal(Cardapio cardapio){
-        double total= 0.0;
+        double total = 0.0;
         for (ItemPedido item:itens) {
             Shake shake = item.getShake();
             double base = cardapio.buscarPreco(shake.getBase()) * (shake.getTipoTamanho().multiplicador);
@@ -58,7 +58,19 @@ public class Pedido {
 
     public boolean removeItemPedido(ItemPedido itemPedidoRemovido) {
 
-        boolean foiRemovido = this.itens.remove(itemPedidoRemovido);
+        boolean foiRemovido = false;
+
+        if (itemPedidoRemovido.getQuantidade() == 1) {
+            this.itens.remove(itemPedidoRemovido);
+            foiRemovido = true;
+        } else {
+            for (ItemPedido item : itens) {
+                if (item.getShake().equals(itemPedidoRemovido.getShake())) {
+                    item.setQuantidade(item.getQuantidade() - 1);
+                    foiRemovido = true;
+                }
+            }
+        }
 
         if (foiRemovido) {
             return true;
